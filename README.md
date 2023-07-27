@@ -1,5 +1,5 @@
 # Clash of Clans CWL ML
-Data pipeline from the Clash of Clans API for machine learning models of Clan War Leagues (CWL). Modeling used to optimize clan performance with team selection, indicate upgrade priorities, and predict final placements of clans.
+Data pipeline from the Clash of Clans API for machine learning models of Clan War Leagues (CWL). Modeling used to optimize clan performance with team selection, indicate upgrade priorities, and predict final placements of clans. Generates ~1 million rows of player performance data.
 
 ## Clash of Clans API
 API key is a JSON Web Token. All requests must include this token, MyKeys.MyToken reference this in the headers section.
