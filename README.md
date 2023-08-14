@@ -11,4 +11,4 @@ The pipeline is time sensitive due Clash of Clans API only allowing pulls of cur
 ### Time windows for each function of pipeline 
 * AutoPipeLeague: execute ~9th day of the month
 * MidCWL: execute 12th+
-* LeagueCWLdfForm: execute after MidCWL, but before 1st of next month
+* DataFrameCWL: execute after MidCWL, but before 1st of next month

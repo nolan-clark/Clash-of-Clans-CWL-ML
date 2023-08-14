@@ -7,7 +7,8 @@ import pandas as pd
 MyToken = MyKeys.MyToken
 
 headers = {'authorization': 'Bearer '+(MyToken), 'Accept': 'application/json'}
-base = 'https://api.clashofclans.com/v1/'
+session = requests.Session()
+session.headers.update(headers)
 
 def grabTags(ClanTag):
     collect = []
@@ -28,7 +29,7 @@ def grabTags(ClanTag):
 def get_attacks(war_id):
     war_id_transformed = war_id.strip('#')
     url=('https://api.clashofclans.com/v1/clanwarleagues/wars/%23'+(war_id_transformed))
-    response = requests.get(url, headers=headers, timeout=30)
+    response = session.get(url, timeout=30)
     member = response.json()['clan'].get('members')
     o_member = response.json()['opponent'].get('members')
     
@@ -63,9 +64,16 @@ def get_attacks(war_id):
              'duration': None}]
         attacks.append(attack[0])
         
+        ['opponentAttacks']
         defense = mem.get('bestOpponentAttack')
-        if defense != None:
-            defense_bin.append(defense)
+        if defense == None:
+            defense = {'defenderTag':None,
+                         'stars': None,
+                         'destructionPercentage': None,
+                         'order': None,
+                         'duration': None
+                        }
+        defense_bin.append(defense)
         
 # grab second clan Name, ID, TH, Attacks, and Defense stats        
     for mem in o_member:
@@ -88,8 +96,15 @@ def get_attacks(war_id):
         attacks.append(attack[0])
         
         defense = mem.get('bestOpponentAttack')
-        if defense != None:
-            defense_bin.append(defense)
+        if defense == None:
+            defense = {'defenderTag':None,
+                         'stars': None,
+                         'destructionPercentage': None,
+                         'order': None,
+                         'duration': None
+                        }
+            
+        defense_bin.append(defense)
    
     
     return data,attacks,defense_bin
@@ -199,7 +214,7 @@ def leagueBinsNotEmpty(dictObj):
 def getClanOppTags(warTag):
     war_id_transformed = warTag.strip('#')
     url=('https://api.clashofclans.com/v1/clanwarleagues/wars/%23'+(war_id_transformed))
-    response = requests.get(url, headers=headers, timeout=30)
+    response = session.get(url,timeout=10)
     
     clans_in_this_war = [response.json()['clan'].get('tag'),response.json()['opponent'].get('tag')]
     
@@ -210,7 +225,7 @@ def getClanOppTags(warTag):
 def grab_cwl_stars(warTag):
     war_id_transformed = warTag.strip('#')
     url=('https://api.clashofclans.com/v1/clanwarleagues/wars/%23'+(war_id_transformed))
-    response = requests.get(url, headers=headers, timeout=30)
+    response = session.get(url,timeout=10)
     
     clan_tag = response.json()['clan'].get('tag')
     opp_tag = response.json()['opponent'].get('tag')
@@ -236,7 +251,7 @@ def grab_cwl_stars(warTag):
 
 def melt(ClanTag):
     url='https://api.clashofclans.com/v1/clans/%23'+ClanTag
-    response = requests.get(url, headers=headers, timeout=30)
+    response = session.get(url,timeout=10)
     #print(response.status_code, response.reason)
     league= response.json()['warLeague']['name']
     
