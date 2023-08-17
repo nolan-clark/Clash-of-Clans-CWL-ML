@@ -7,8 +7,6 @@ import pandas as pd
 MyToken = MyKeys.MyToken
 
 headers = {'authorization': 'Bearer '+(MyToken), 'Accept': 'application/json'}
-session = requests.Session()
-session.headers.update(headers)
 
 def grabTags(ClanTag):
     collect = []
@@ -26,10 +24,8 @@ def grabTags(ClanTag):
     
     return collDict
     
-def get_attacks(war_id):
-    war_id_transformed = war_id.strip('#')
-    url=('https://api.clashofclans.com/v1/clanwarleagues/wars/%23'+(war_id_transformed))
-    response = session.get(url, timeout=30)
+def get_attacks(response):
+
     member = response.json()['clan'].get('members')
     o_member = response.json()['opponent'].get('members')
     
@@ -222,10 +218,7 @@ def getClanOppTags(warTag):
     
 # Return stars and percentage
 
-def grab_cwl_stars(warTag):
-    war_id_transformed = warTag.strip('#')
-    url=('https://api.clashofclans.com/v1/clanwarleagues/wars/%23'+(war_id_transformed))
-    response = session.get(url,timeout=10)
+def grab_cwl_stars(response):
     
     clan_tag = response.json()['clan'].get('tag')
     opp_tag = response.json()['opponent'].get('tag')
