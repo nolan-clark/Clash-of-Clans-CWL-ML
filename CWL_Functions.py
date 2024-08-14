@@ -8,6 +8,24 @@ MyToken = MyKeys.MyToken
 
 headers = {'authorization': 'Bearer '+(MyToken), 'Accept': 'application/json'}
 
+def search_clans_v2(**payload):
+    
+    
+    url='https://api.clashofclans.com/v1/clans?'
+    response = requests.get(url, headers=headers, params = payload, timeout=30)
+    print(response.status_code, response.reason)
+    
+    top_clans=[i['tag'].strip('#') for i in response.json()['items']]
+    
+    #top_clans=response.json()
+    
+    try:
+        after = response.json()['paging'].get('cursors')['after']
+    except:
+        after = False
+    
+    return top_clans, after
+    
 def grabTags(ClanTag):
     collect = []
     month=datetime.datetime.now().strftime('%B')
@@ -181,9 +199,9 @@ def league(clanTag):
 
 # Return true if status of clan is in a 15 clan CWL 
 
-def status15(clanTag):
-    url='https://api.clashofclans.com/v1/clans/%23'+clanTag+'/currentwar/leaguegroup'
-    response = requests.get(url, headers=headers, timeout=30)
+def status15(response):
+    #url='https://api.clashofclans.com/v1/clans/%23'+clanTag+'/currentwar/leaguegroup'
+    #response = requests.get(url, headers=headers, timeout=30)
     #print(response.status_code, response.reason)
     
     if response.status_code == 200:
@@ -260,11 +278,15 @@ def grabTagsBig(ClanTag):
     response = requests.get(url, headers=headers, timeout=30)
     #print(response.status_code, response.reason)
     
+    
+    # range of 7 so that only CWL with all rounds will be pulled
     for i in range(7):
         collect.extend(response.json().get('rounds')[i].get('warTags'))
-    
-    collDict = collect
-    
+    if collect[-1] == '#0':
+        collDict = None
+    else:
+        collDict = collect
+
     return collDict
 
 # Return warStatus of cwl round -- to verify all wars have ended before framing data
