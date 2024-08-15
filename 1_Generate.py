@@ -7,6 +7,7 @@ import pandas as pd
 import json
 import datetime
 from tqdm import tqdm
+import os
 
 import CWL_Functions as cf
 import MyKeys # Private API KEY -- update MyKeys.py 
@@ -14,6 +15,17 @@ import MyKeys # Private API KEY -- update MyKeys.py
 # Automate pointers for the pipeline -- avoid erasing previous month
 month=datetime.datetime.now().strftime('%B')
 
+
+# Write output directory if first run
+path = './output'
+
+# check whether directory already exists
+if not os.path.exists(path):
+  os.mkdir(path)
+  print("Folder %s created!" % path)
+else:
+  print("Folder %s already exists" % path)
+    
 # ******* OUTPUT location ********
 out_file = f'output/pipeCheckpoint_1_{month}.json'
 
